@@ -4,33 +4,87 @@
 // denoted by n!, is the product of all positive integers less than or equal to n.
 // Example:  5! = 5 x 4 x 3 x 2 x 1 = 120
 // factorial(5);  // 120
-var factorial = function(n) {
- 
+var factorial = function(n, output = 1) {
+ // base
+ if (n === 0) {
+return output
+ }
+ if (n < 0) {
+  return null
+ }
+ // recursion
+ output *= n;
+ return factorial(n - 1, output)
+
 };
 
 // 2. Compute the sum of an array of integers.
 // Example:  sum([1, 2, 3, 4, 5, 6]);  // 21
-var sum = function(array) {
+var sum = function(array, output=0) {
+if (array.length === 0) {
+  return output
+}
+output += array[0];
+return sum(array.slice(1), output)
 };
 
 // 3. Sum all numbers in an array containing nested arrays.
 // Example: arraySum([1,[2,3],[[4]],5]); // 15
 var arraySum = function(array) {
+  // do not solve yet
 };
 
 // 4. Check if a number is even.
 var isEven = function(n) {
+  // base
+if (n < 0) {
+  return isEven(-n)
+}
+if (n === 0) {
+return true
+}
+if (n === 1) {
+return false
+}
+  // recursion
+
+return isEven(n -= 2)
 };
 
 // 5. Sum all integers below a given integer.
 // sumBelow(10); // 45
 // sumBelow(7); // 21
-var sumBelow = function(n) {
+var sumBelow = function(n, output=0) {
+  // base
+if (n === 0){
+  return output
+}
+if (n < 0) {
+  output += n + 1
+  return sumBelow(n + 1, output)
+}
+  // recursion
+output += n - 1
+return sumBelow(n - 1, output)
 };
 
 // 6. Get the integers in range (x, y).
 // Example:  range(2, 9);  // [3, 4, 5, 6, 7, 8]
-var range = function(x, y) {
+var range = function(x, y, output=[]) {
+  // base
+  if (y === x + 1 || x === y + 1) {
+    return output
+  }
+  if (x === y || x + 1 === y || y + 1 === x) {
+  return []
+}
+if (x > y ) {
+  output.push(x - 1);
+  return range(x - 1, y, output)
+}
+  // recursion
+  output.unshift(y - 1)
+  return range(x, y - 1, output)
 };
 
 // 7. Compute the exponent of a number.
@@ -38,7 +92,18 @@ var range = function(x, y) {
 // 8^2 = 8 x 8 = 64.  Here, 8 is the base and 2 is the exponent.
 // Example:  exponent(4,3);  // 64
 // https://www.khanacademy.org/computing/computer-science/algorithms/recursive-algorithms/a/computing-powers-of-a-number
-var exponent = function(base, exp) {
+var exponent = function(base, exp, output=1) {
+  // base
+if (exp === 0) {
+  return output
+}
+if (exp < 0) {
+output /= base
+return exponent(base, exp + 1, output)
+}
+  // recursion
+output *= base
+return exponent(base, exp - 1, output)
 };
 
 // 8. Determine if a number is a power of two.
@@ -46,14 +111,39 @@ var exponent = function(base, exp) {
 // powerOfTwo(16); // true
 // powerOfTwo(10); // false
 var powerOfTwo = function(n) {
+  // base
+if (n < 1 || n % 1 !== 0) {
+  return false
+}
+if (n === 1) {
+  return true
+}
+  // recursion
+  return powerOfTwo(n / 2)
 };
 
 // 9. Write a function that accepts a string a reverses it.
-var reverse = function(string) {
+var reverse = function(string, output='') {
+// base
+if (string.length === 0) {
+  return output
+}
+// recursion
+output = string[0] + output
+return reverse(string.slice(1), output)
 };
 
 // 10. Write a function that determines if a string is a palindrome.
 var palindrome = function(string) {
+// base
+if (string.length === 0) {
+
+}
+// recursion
+if(string[0] === string[string.length - 1]){
+  
+}
+return palindrome(string.slice(1))
 };
 
 // 11. Write a function that returns the remainder of x divided by y without using the
@@ -62,18 +152,29 @@ var palindrome = function(string) {
 // modulo(17,5) // 2
 // modulo(22,6) // 4
 var modulo = function(x, y) {
-  
+  // do not solve yet
 };
 
 // 12. Write a function that multiplies two numbers without using the * operator  or
 // JavaScript's Math object.
 // ATTENTION DO NOT LEAVE COMMENTS IN THIS FUNCTION. The test is looking for any ('/').
-var multiply = function(x, y) {
+var multiply = function(x, y, output=0) {
+  if (y === 0) {
+return output
+  }
+  if (y < 0) {
+    output -= x
+    return multiply (x, y + 1, output)
+  }
+
+output += x
+return multiply(x, y - 1, output)
 };
 
 // 13. Write a function that divides two numbers without using the / operator  or
 // JavaScript's Math object.
 var divide = function(x, y) {
+  // do not solve yet
 };
 
 // 14. Find the greatest common divisor (gcd) of two positive numbers.  The GCD of two
@@ -82,7 +183,7 @@ var divide = function(x, y) {
 // http://www.cse.wustl.edu/~kjg/cse131/Notes/Recursion/recursion.html
 // https://www.khanacademy.org/computing/computer-science/cryptography/modarithmetic/a/the-euclidean-algorithm
 var gcd = function(x, y) {
-  
+  // do not solve yet
 };
 
 // 15. Write a function that compares each character of two strings and returns true if
@@ -91,33 +192,72 @@ var gcd = function(x, y) {
 // compareStr('', '') // true
 // compareStr('tomato', 'tomato') // true
 var compareStr = function(str1, str2) {
+  if (str1 === '' && str2 === '') {
+    return true
+  }
+if (str1[0] !== str2[0]) {
+  return false
+}
+// recursion
+return compareStr(str1.slice(1), str2.slice(1))
 };
 
 // 16. Write a function that accepts a string and creates an array where each letter
 // occupies an index of the array.
-var createArray = function(str){
+var createArray = function(str, output=[]){
+if (str.length === 0) {
+return output
+}
+// recursion
+output.push(str[0])
+return createArray(str.slice(1), output)
 };
 
 // 17. Reverse the order of an array
-var reverseArr = function (array) {
+var reverseArr = function (array, output=[]) {
+  if (array.length === 0) {
+  return output
+  }
+  // recursion
+  output.unshift(array[0])
+  return reverseArr(array.slice(1), output)
 };
 
 // 18. Create a new array with a given value and length.
 // buildList(0,5) // [0,0,0,0,0]
 // buildList(7,3) // [7,7,7]
-var buildList = function(value, length) {
+var buildList = function(value, length, output=[]) {
+if (length === 0) {
+  return output
+}
+// recursion
+output.push(value)
+return buildList(value, length - 1, output)
 };
 
 // 19. Count the occurence of a value inside a list.
 // countOccurrence([2,7,4,4,1,4], 4) // 3
 // countOccurrence([2,'banana',4,4,1,'banana'], 'banana') // 2
-var countOccurrence = function(array, value) {
+var countOccurrence = function(array, value, output=0) {
+if (array.length === 0) {
+return output
+}
+// recursion
+if (array[0] === value) {
+output += 1
+}
+return countOccurrence(array.slice(1), value, output)
 };
 
 // 20. Write a recursive version of map.
 // rMap([1,2,3], timesTwo); // [2,4,6]
 var rMap = function(array, callback, output=[]) {
-  
+if (array.length === 0) {
+  return output;
+}
+// recursion
+output.push(callback(array[0]))
+return rMap(array.slice(1), callback, output)
 };
 
 // 21. Write a function that counts the number of times a key occurs in an object.
@@ -125,6 +265,7 @@ var rMap = function(array, callback, output=[]) {
 // countKeysInObj(testobj, 'r') // 1
 // countKeysInObj(testobj, 'e') // 2
 var countKeysInObj = function(obj, key) {
+  // do not solve yet
 };
 
 // 22. Write a function that counts the number of times a value occurs in an object.
@@ -132,11 +273,13 @@ var countKeysInObj = function(obj, key) {
 // countValuesInObj(testobj, 'r') // 2
 // countValuesInObj(testobj, 'e') // 1
 var countValuesInObj = function(obj, value) {
+  // do not solve yet
 };
 
 // 23. Find all keys in an object (and nested objects) by a provided name and rename
 // them to a provided new name while preserving the value stored at that key.
 var replaceKeysInObj = function(obj, key, newKey) {
+  // do not solve yet
 };
 
 // 24. Get the first n Fibonacci numbers.  In the Fibonacci Sequence, each subsequent
@@ -145,6 +288,7 @@ var replaceKeysInObj = function(obj, key, newKey) {
 // fibonacci(5);  // [0, 1, 1, 2, 3, 5]
 // Note:  The 0 is not counted.
 var fibonacci = function(n) {
+  // do not solve yet
 };
 
 // 25. Return the Fibonacci number located at index n of the Fibonacci sequence.
@@ -176,11 +320,13 @@ var capitalizeFirst = function(array) {
 // };
 // nestedEvenSum(obj1); // 10
 var nestedEvenSum = function(obj) {
+  // do not solve yet
 };
 
 // 29. Flatten an array containing nested arrays.
 // Example: flatten([1,[2],[3,[[4]]],5]); // [1,2,3,4,5]
 var flatten = function(arrays) {
+  // do not solve yet
 };
 
 // 30. Given a string, return an object containing tallies of each letter.
@@ -200,6 +346,7 @@ var compress = function(list) {
 // itself.
 // Example: augmentElements([[],[3],[7]], 5); // [[5],[3,5],[7,5]]
 var augmentElements = function(array, aug) {
+  // do not solve yet
 };
 
 // 33. Reduce a series of zeroes to a single 0.
